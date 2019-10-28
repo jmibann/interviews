@@ -26,7 +26,12 @@ const setQuestionsSis = (questionSIS) => {
 
 export const getQuestions = () => dispatch =>
   axios.get('/api/question/reqAllQuestions/')
-    .then(res => dispatch(setQuestions(res.data)));
+    .then(res => res.data)
+    .then(questions => {
+      questions.forEach(question => question.skills = question.skills.map(skill => skill.skill).sort().join(' - '));
+      return questions
+    })
+    .then(questions => dispatch(setQuestions(questions)));
 
 export const searchHRQuestions = () => dispatch =>
   axios.get('/api/question/searchHRQuestions/')

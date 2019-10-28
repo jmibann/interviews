@@ -70,16 +70,20 @@ class AddCandidate extends React.Component {
     e.preventDefault();
     let skillID = e.target.value;
     let selectedSkills = this.state.candidateToPost.selectedSkills;
+    let exist = false;
 
-    if (selectedSkills.findIndex(skill => skill.id == skillID) > 0) {
-      toastr.warning('Skill already selected');
-    } else {
-      selectedSkills.push(this.state.skillList.find(skill => skill.id == skillID));
-      let candidateToPost = { ...this.state.candidateToPost, selectedSkills };
-      this.setState({ candidateToPost });
-    }
+    selectedSkills.forEach(skill => {
+      if (skill.id === Number(skillID)) {
+        toastr.warning('Skill already selected');
+        exist = true;
+      }
+    });
+
+    if (exist) return;
+    selectedSkills.push(this.state.skillList.find(skill => skill.id == skillID));
+    let candidateToPost = { ...this.state.candidateToPost, selectedSkills };
+    this.setState({ candidateToPost });
   }
-
   onClick() {
     this.props.history.push('/candidate');
   }

@@ -11,11 +11,10 @@ import Modal from '../app/Modal';
 import AddQuestion from './AddQuestion.container';
 import AddQuestionDropdown from './AddQuestionDropdown';
 
-const QuestionsGrid = ({ questions,getQuestions, skillArray, getSkillArray, editQuestion, deleteQuestion }) => {
+const QuestionsGrid = ({ questions, getQuestions, skillArray, getSkillArray, editQuestion, deleteQuestion }) => {
 
   const [whichComponent, setWhichComponent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [questions4ReactTable, SetQuestions4ReactTable] = useState([]);
   const [selectedID, setSelectedId] = useState(null);
   const [selectedContent, setSelectedContent] = useState(null);
 
@@ -60,6 +59,8 @@ const QuestionsGrid = ({ questions,getQuestions, skillArray, getSkillArray, edit
   const closeModal = () => { setIsModalOpen(false) }
 
   const openModal = () => { toggleState("addNewQuestionModal") }
+
+  const refreshGrid = () => { getQuestions() }
 
   const modalRenderer = () => {
     switch (whichComponent) {
@@ -116,7 +117,7 @@ const QuestionsGrid = ({ questions,getQuestions, skillArray, getSkillArray, edit
     Filter: ({ filter, onChange }) =>
       <select onChange={event => onChange(event.target.value)} style={{ width: '100%' }} value={filter ? filter.value : 'all'} >
         <option value="">All</option>
-        {skillArray ? skillArray.map(skill => (<option value={skill} key={skill}>{skill}</option>)) : null}
+        {skillArray.map(skill => (<option value={skill} key={skill}>{skill}</option>))}
       </select>
   },
   {
@@ -180,17 +181,6 @@ const QuestionsGrid = ({ questions,getQuestions, skillArray, getSkillArray, edit
   }
   ];
 
-
-  if (!!questions && questions[0] && Array.isArray(questions[0].skills)) {
-    let copyCandidates = questions;
-    for (let i = 0; i < questions.length; i += 1) {
-      let pepe = [];
-      copyCandidates[i].skills.map(skill => pepe.push(skill.skill));
-      copyCandidates[i].skills = pepe.join(' - ');
-    }
-    SetQuestions4ReactTable(copyCandidates);
-  }
-
   return (
     <div>
 
@@ -202,7 +192,7 @@ const QuestionsGrid = ({ questions,getQuestions, skillArray, getSkillArray, edit
         <ReactTable
           className="-striped -highlight"
           columns={columns}
-          data={questions4ReactTable}
+          data={questions}
           previousText="<"
           nextText=">"
           PaginationComponent={Pagination}

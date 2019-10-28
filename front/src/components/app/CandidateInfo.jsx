@@ -39,9 +39,11 @@ const CandidateInfo = props => {
           <button className='btn btn-orange pull-down pull-left' type='Submit'> Add Interviewer</button>
           <button className='btn btn-orange pull-down' type='Submit'> Start Interview</button>
           <button className='btn btn-orange pull-down' type='Submit'> See Report</button>
-          <button className='btn btn-orange pull-down pull-right no-margin' onClick={onClick} type='Submit'> <i className="far fa-window-close"></i>Back</button>
+          <button className='btn btn-orange pull-down pull-right no-margin' onClick={onClick} type='Submit'> <span style={{ width: '75px', display: 'flex', justifyContent: 'space-evenly' }}>
+            <i className="far fa-window-close"></i>Back</span></button>
+
         </div>
-      </div>
+      </div >
 
       : null
   );

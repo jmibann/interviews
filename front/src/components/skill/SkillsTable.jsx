@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import ReactTable from 'react-table';
-import Pagination from '../../helpers/Pagination';
 import matchSorter from 'match-sorter';
-import Modal from '../app/Modal';
-import { toastr, actions as toastrActions } from 'react-redux-toastr';
-import { getAllSkills, modifySkill } from '../../../redux/action-creator/skill';
 import { connect } from 'react-redux';
+import { toastr } from 'react-redux-toastr';
+import Pagination from '../../helpers/Pagination';
 
-const SkillsTable = (props) => {
+import Modal from '../app/Modal';
+import { modifySkill } from '../../../redux/action-creator/skill';
+
+const SkillsTable = ({ refreshTable, skillList, isLoading }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -34,10 +35,10 @@ const SkillsTable = (props) => {
       if (res) {
         setSelectedId(null);
         setContent(null);
-        props.refreshTable();
+        refreshTable();
         setIsModalOpen(false);
       } else {
-        toastr.error('That skill already exists');
+        toastr.error('Skill already exists');
       }
 
     }
@@ -92,7 +93,7 @@ const SkillsTable = (props) => {
             </div>
             <div className="modal-footer">
               <button type="button" className='btn btn-orange' onClick={closeModal}>Cancel</button>
-              <button type="button" className='btn btn-orange pull-right' onClick={() => updateSkill(selectedId, content)}>Change</button>
+              <button type="button" className='btn btn-orange pull-right' onClick={() => updateSkill(selectedId, content)}>Edit</button>
             </div>
           </div>
         </Modal>
@@ -103,11 +104,11 @@ const SkillsTable = (props) => {
         <ReactTable
           className="-striped -highlight"
           columns={columns}
-          data={props.skillList}
+          data={skillList}
           previousText="<"
           nextText=">"
           PaginationComponent={Pagination}
-          isLoading={props.isLoading}
+          isLoading={isLoading}
           filterable
           minRows={0}
           defaultPageSize={10}
@@ -119,9 +120,4 @@ const SkillsTable = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  getAllSkills: () => dispatch(getAllSkills()),
-  modifySkill: (id, content) => dispatch(modifySkill(id, content)),
-});
-
-export default connect(null, mapDispatchToProps)(SkillsTable);
+export default SkillsTable;

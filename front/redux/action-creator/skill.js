@@ -28,3 +28,7 @@ export const saveSkillsFromFile = (skillsArray) => dispatch => {
     skillsArray.forEach(skill => arrayPromises.push(axios.post('/api/question/create/skills', { skill: skill })))
     return Promise.all(arrayPromises);
 };
+
+export const deleteSkill = (index) => {
+    return axios.post('/api/skill/delete', { deleted: index })
+}

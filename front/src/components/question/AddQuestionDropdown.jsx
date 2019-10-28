@@ -6,7 +6,7 @@ import { saveQuestionsFromFile } from '../../../redux/action-creator/question';
 import { saveSkillsFromFile } from '../../../redux/action-creator/skill';
 
 
-const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFile }) => {
+const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFile, getSkillArray }) => {
 
   const handleFiles = (files) => {
     let quoteRemover = function (str) {
@@ -24,6 +24,7 @@ const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFil
       for (var i = 0; i < lines.length; i++) {
         currentline = lines[i].split(';');
         array = JSON.parse(currentline[2]);
+        array = array.map(skill => skill.toLowerCase());
 
         obj = {
           content: quoteRemover(currentline[0]),

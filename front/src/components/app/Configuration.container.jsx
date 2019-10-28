@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 
 import QuestionsGrid from '../question/QuestionsGrid';
-import Skill from '../skill/AddSkillcontainer';
+import Skill from '../skill/Skill';
 
 const ConfigurationContainer = props => {
 

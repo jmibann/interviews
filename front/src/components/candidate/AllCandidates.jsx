@@ -164,47 +164,47 @@ class AllCandidates extends React.Component {
   // ------------------This is commented temporarily due to app priorities.Still works properly and you need it to enable it in order to do an interview.
   // See also line 291 in order to work properly
 
-  renderSwitch(param) {
-    switch (param.status) {
-      case 'New':
-        return (<div className='pull-left'>
-          <i className="fas fa-user-friends" onClick={() => this.setState({ choosenCandidate: param.id }, this.toggleState("assignInterviewerModal"))}></i>
-          <i className="fas fa-user-edit"></i>
-          <i className="far fa-file-alt "></i>
-        </div>
-        );
-      case 'Started':
-        return (
-          <div className='pull-left'>
-            <i className="fas fa-user-friends"></i>
-            <Link to={`/preinterview/${param.id}`}>
-              <i className="fas fa-user-edit"></i>
-            </Link>
-            <i className="far fa-file-alt"></i>
-          </div>
-        );
-      case 'Rejected':
-        return (
-          <div className='pull-left'>
-            <i className="fas fa-user-friends"></i>
-            <i className="fas fa-user-edit"></i>
-            <Link to={`/candidates/${param.id}/interview/${param.InterviewIDId}`}>
-              <i className="far fa-file-alt"></i>
-            </Link>
-          </div>
-        )
-      case 'Approved':
-        return (
-          <div className='pull-left'>
-            <i className="fas fa-user-friends"></i>
-            <i className="fas fa-user-edit"></i>
-            <Link to={`/candidates/${param.id}/interview/${param.InterviewIDId}`}>
-              <i className="far fa-file-alt"></i>
-            </Link>
-          </div>
-        )
-    }
-  }
+  // renderSwitch(param) {
+  //   switch (param.status) {
+  //     case 'New':
+  //       return (<div className='pull-left'>
+  //         <i className="fas fa-user-friends" onClick={() => this.setState({ choosenCandidate: param.id }, this.toggleState("assignInterviewerModal"))}></i>
+  //         <i className="fas fa-user-edit"></i>
+  //         <i className="far fa-file-alt "></i>
+  //       </div>
+  //       );
+  //     case 'Started':
+  //       return (
+  //         <div className='pull-left'>
+  //           <i className="fas fa-user-friends"></i>
+  //           <Link to={`/preinterview/${param.id}`}>
+  //             <i className="fas fa-user-edit"></i>
+  //           </Link>
+  //           <i className="far fa-file-alt"></i>
+  //         </div>
+  //       );
+  //     case 'Rejected':
+  //       return (
+  //         <div className='pull-left'>
+  //           <i className="fas fa-user-friends"></i>
+  //           <i className="fas fa-user-edit"></i>
+  //           <Link to={`/candidates/${param.id}/interview/${param.InterviewIDId}`}>
+  //             <i className="far fa-file-alt"></i>
+  //           </Link>
+  //         </div>
+  //       )
+  //     case 'Approved':
+  //       return (
+  //         <div className='pull-left'>
+  //           <i className="fas fa-user-friends"></i>
+  //           <i className="fas fa-user-edit"></i>
+  //           <Link to={`/candidates/${param.id}/interview/${param.InterviewIDId}`}>
+  //             <i className="far fa-file-alt"></i>
+  //           </Link>
+  //         </div>
+  //       )
+  //   }
+  // }
 
   dataArrayAdapterForTable(dataArray) {
     if (!!dataArray && dataArray[0] && Array.isArray(dataArray[0].skills)) {
@@ -289,7 +289,7 @@ class AllCandidates extends React.Component {
       Cell: (props) => {
         return (
           <div className='actionsTableStyled pull-left'>
-            {this.renderSwitch(props.original)}
+            {/* {this.renderSwitch(props.original)} */}
             <i onClick={() => this.setState({ selected: props.original.id }, this.toggleState("deleteModal"))} className="far fa-trash-alt"></i>
           </div >
         );
