@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  interviews-db:
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+     - POSTGRES_DB=endavadb
+    ports:
+      - 5430:5432
+    networks:
+       - app-network  
+  
+  interviews-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - app-network  
+    depends_on:
+      - interviews-db
+volumes:
+  db-data:
+
+networks:
+  app-network:
+
+
