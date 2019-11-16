@@ -7,9 +7,10 @@ import ProgressBar from './ProgressBar';
 import './uploadFile.css';
 
 const MAX_SIZE = 5e6;
+const MAX_CHARACTERS = 15;
 const allowedFiletypes = ['pdf', 'doc', 'docx', 'txt'];
 
-const UploadFile = () => {
+const UploadFile = ({ onChange }) => {
 
   const [files, setFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -24,13 +25,22 @@ const UploadFile = () => {
     setFiles(newFileArray);
   }
 
+  const characterLimiter = (string) => {
+
+    if (string.length >= MAX_CHARACTERS) {
+      return string.slice(0, MAX_CHARACTERS) + "..."
+    } else {
+      return string
+    }
+  }
+
   const renderProgress = (file, uploadProgress) => {
     const fileUploadProgress = uploadProgress[file.name];
 
     // if (isUploading || successfullyUploaded) {
     return (
       <div className="progress-wrapper">
-        <span className="filename ">{file.name}</span>
+        <span className="filename ">{characterLimiter(file.name)}</span>
         <ProgressBar progress={fileUploadProgress ? fileUploadProgress.percentage : 0} />
         <img
           alt="done"
@@ -77,9 +87,9 @@ const UploadFile = () => {
 
   const renderActions = () => {
     if (successfullyUploaded) {
-      return (<button className='btn btn-orange' onClick={clear}> Clear </button>);
+      return (<button className='btn btn-orange pull-right' onClick={clear}> Clear </button>);
     } else {
-      return (<button className='btn btn-orange' disabled={files.length <= 0 || isUploading} onClick={uploadFiles}> Upload </button>);
+      return (<button className='btn btn-orange pull-right' disabled={files.length <= 0 || isUploading} onClick={uploadFiles}> Upload </button>);
     }
   }
 
@@ -149,21 +159,20 @@ const UploadFile = () => {
   return (
     <div className="upload">
       <div className="content">
-        <div>
-          <Dropzone filesAddition={filesAddition} disabled={isUploading || successfullyUploaded} />
-        </div>
-        <div className="files">
-          {files.map(file => {
-            return (
-              <div key={file.name} className='row atachment'>
-                {renderProgress(file, uploadProgress)}
-              </div>
-            );
-          })}
-        </div>
+
+        <Dropzone
+          onChange={onChange}
+          renderActions={renderActions}
+          filesAddition={filesAddition}
+          disabled={isUploading || successfullyUploaded}
+          renderProgress={renderProgress}
+          files={files}
+          uploadProgress={uploadProgress}
+        />
+
       </div>
-      <div className="actions" />
-      {renderActions()}
+      {/* <div className="actions" /> */}
+      {/* {renderActions()} */}
     </div>
   )
 }

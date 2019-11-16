@@ -36,16 +36,13 @@ const Candidate = ({ onChange, skillList, handleSkillSubmit, closeModal, onSubmi
         </div>
 
         <div className='addCandidateDiv' style={{ width: '100%' }}>
-          <label >Work Experience</label>
-          <textarea onChange={onChange} className='inputLogin add-candidate-text-input' rows='3' name='expertise'></textarea>
+          <UploadFile onChange={onChange} />
           <span aria-hidden='true' className='red'>*Required field</span>
         </div>
 
       </div>
 
       <div className='add-candidate-modal-right'>
-        <UploadFile />
-
         <div className='add-candidate-buttons'>
           <button type='button' className='btn btn-secondary' onClick={closeModal}>Cancel</button>
           <button type='button' className='btn btn-orange pull-right' onClick={onSubmit}>Add</button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './dropzone.css'
 
-const Dropzone = ({ disabled, filesAddition }) => {
+const Dropzone = ({ files, disabled, filesAddition, onChange, renderActions, renderProgress, uploadProgress }) => {
 
   const [fileInputRef, setFileInputRef] = useState(React.createRef());
   const [hightlight, setHightLight] = useState(false);
@@ -55,17 +55,29 @@ const Dropzone = ({ disabled, filesAddition }) => {
   return (
     <div>
 
-      <button onClick={openFileDialog} className="btn btn-orange no-margin">
-        <span>Upload Files </span>
-        <span className="fas fa-paperclip"></span>
-        <input ref={fileInputRef} className="file-input" type="file" multiple onChange={onFilesAdded} />
-      </button>
-      <div className={`dropzone ${hightlight ? "highlight" : ""}`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} onClick={openFileDialog} style={{ cursor: disabled ? "default" : "pointer" }}>
-        {/* <img alt="upload" className="icon" src='/img/cloud_upload-24px.svg' /> */}
-
-        {/* <i className="fas fa-paperclip icon"></i> */}
-
+      <div className={`dropzone ${hightlight ? "highlight" : ""}`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} style={{ cursor: disabled ? "default" : "pointer" }}>
+        <label className='pull-left' >Work Experience</label>
+        <textarea onChange={onChange} className='inputLogin add-candidate-text-input' rows='3' name='expertise'></textarea>
       </div>
+
+      <div className="files">
+        {files.map(file =>
+          <div key={file.name} className='row atachment'>
+            {renderProgress(file, uploadProgress)}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <button onClick={openFileDialog} className="btn btn-orange no-margin">
+          <span>Upload Files </span>
+          <span className="fas fa-paperclip"></span>
+          <input ref={fileInputRef} className="file-input" type="file" multiple onChange={onFilesAdded} />
+        </button>
+
+        {renderActions()}
+      </div>
+
     </div>
   );
 }

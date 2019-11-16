@@ -36,33 +36,34 @@ const AddQuestionContainer = ({ refreshGrid, closeModal }) => {
     if (checkIfSkillWasSelected()) {
       createQuestion(question, selectedSkills, isMandatory)
         .then(wasCreated => {
-          if(wasCreated){
+          if (wasCreated) {
             toastr.success('Question has been created sucessfully');
             setSelectedSkills([]);
             refreshGrid();
             closeModal();
-          }else{
+          } else {
             toastr.error('Question already exists', 'Question cannot be duplicated');
           }
         })
-  } else if (checkEmptyQuestion()) {
-    toastr.error('Question field empty', 'Question field cannot be empty');
-  } else {
-    toastr.error('No skill selected', 'All questions must have skills asigned');
+    } else if (checkEmptyQuestion()) {
+      toastr.error('Question field empty', 'Question field cannot be empty');
+    } else {
+      toastr.error('No skill selected', 'All questions must have skills asigned');
+    }
   }
-}
 
 
-return (
-  <AddQuestion
-    setQuestionContent={setQuestionContent}
-    skills={skills}
-    setQuestionSkills={setQuestionSkills}
-    isMandatory={isMandatory}
-    onChange={onChange}
-    closeModal={closeModal}
-    finalSubmit={finalSubmit} />
-);
+  return (
+    <AddQuestion
+      skills={skills}
+      onChange={onChange}
+      closeModal={closeModal}
+      finalSubmit={finalSubmit}
+      isMandatory={isMandatory}
+      setQuestionSkills={setQuestionSkills}
+      setQuestionContent={setQuestionContent}
+    />
+  );
 
 };
 
