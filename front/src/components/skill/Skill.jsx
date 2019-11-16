@@ -19,7 +19,7 @@ const Skill = () => {
     setIsLoading(true);
     fetchAllSkills();
 
-  },[]);
+  }, []);
 
   const handleChange = (e) => { setSkillInput(e.target.value) };
 
@@ -43,21 +43,21 @@ const Skill = () => {
     });
   }
 
+  const checkIfSkillSelected = () => { return skillInput === '' }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (skillInput === '') {
+    if (checkIfSkillSelected()) {
       toastr.error('No skill selected', 'Skill field cannot be empty');
     } else {
-
-      let skill = lowercaseOrderedString(skillInput);
-
-      createSkill(skill).then(created => {
+      createSkill(lowercaseOrderedString(skillInput)).then(created => {
         if (created) {
           setSkillInput('');
           setIsLoading(true);
           getAllSkills().then(skillList => {
             setSkillList(skillList);
             setIsLoading(false);
+            toastr.success('Skill was created successfully');
           })
         }
         else {

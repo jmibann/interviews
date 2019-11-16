@@ -7,6 +7,10 @@ router.get('/delete/:id', (req, res) => {
   Questions.findByPk(req.params.id).then(question => question.destroy().then(() => res.sendStatus(200)));
 });
 
+router.get('/logicDelete/:id', (req, res) => {
+  Questions.findByPk(req.params.id).then(question => question.update({ active: false }).then(() => res.sendStatus(200)));
+});
+
 router.get('/reqAllQuestions', (req, res) => {
   const skillModel = [{ model: Skill, through: { attributes: [] } }];
 
@@ -19,21 +23,37 @@ router.get('/sizeOfAllSistQuestions', (req, res) => {
   Questions.findAll({ include: skillModel }).then(questionArray => res.send({ length: questionArray.length }));
 });
 
-router.post('/edit/:id', (req, res) => Questions.findByPk(req.params.id).then(question => question.update({ content: req.body.content }).then(updatedQuestion => res.send(updatedQuestion))));
+router.put('/edit/:id', (req, res) => {
+  Questions.findOne({ where: { content: req.body.content } }).then(wasFound => {
+    if (wasFound) {
+      return res.send(false);
+    }
+    else {
+      Questions.findByPk(req.params.id).then(question => question.update({ content: req.body.content }).then(updatedQuestion => res.send(true)));
+    }
+  })
+})
 
 router.post('/create', (req, res) => {
   const condition = { content: req.body.content };
+  const mandatory = req.body.mandatory;
+  const skills = req.body.skills;
+  let question = req.body;
 
-  Questions.findOrCreate({ where: condition }).then(([question, created]) => {
-    if (created) {
-      question.update({mandatory: req.body.mandatory})
-      question.setSkills(req.body.skills);
-      return res.sendStatus(200);
+  Questions.findOne({ where: condition }).then(wasFound => {
+    if (wasFound) {
+      return res.send(false);
+    } else {
+      delete (question.skills)
+      Questions.create(question).then(question => {
+        question.update({ mandatory })
+        question.setSkills(skills);
+        return res.send(true);
+      })
     }
-    res.sendStatus(500);
   })
-    .catch(() => res.sendStatus(500));
-});
+    .catch(() => res.send(500));
+})
 
 router.post('/bulkCreate', (req, res, next) => {
   const questionsArray = req.body;
@@ -44,7 +64,7 @@ router.post('/bulkCreate', (req, res, next) => {
     skills.map(skill => str2IdTranslator[skill.skill] = skill.id);
 
     questionsArray.forEach(question => {
-      let skillArray = question.skills.map( skillString => (str2IdTranslator[skillString]));
+      let skillArray = question.skills.map(skillString => (str2IdTranslator[skillString]));
       delete question.skills;
 
       Questions.create(question).then(createdQuestion => promiseArray.push(createdQuestion.setSkills(skillArray)))

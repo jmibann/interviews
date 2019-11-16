@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 
-const SkillInput = props => {
+const SkillInput = ({ options, setQuestionSkills, initialSelected = null }) => {
 
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const { options, setQuestionSkills } = { ...props };
+  const [selectedOption, setSelectedOption] = useState(initialSelected);
 
   const handleChange = selectedOption => {
     setQuestionSkills(selectedOption ? selectedOption.map(option => option.id) : []);

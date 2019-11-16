@@ -5,9 +5,9 @@ const Skill = require('./skill');
 const Answers = require('./answers');
 const Candidate = require('./candidate');
 
-Candidate.belongsTo(User, { as: 'interviewerHR' });
-Candidate.belongsTo(User, { as: 'interSIST1' });
-Candidate.belongsTo(User, { as: 'interSIST2' });
+Candidate.belongsTo(User, { as: 'interviewer1' });
+Candidate.belongsTo(User, { as: 'interviewer2' });
+Candidate.belongsTo(User, { as: 'interviewer3' });
 
 Interview.belongsTo(Candidate, { as: 'candidateID' });
 Candidate.belongsTo(Interview, { as: 'InterviewID', constraints: false });

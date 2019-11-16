@@ -1,47 +1,39 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom';
 import { toastr } from 'react-redux-toastr';
 
+import { SET_USER } from '../../../redux/constants'
 import { checkUserLogin } from '../../../redux/action-creator/user';
 
 import LoginForm from './LoginForm';
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      email: '', 
-      password: '' 
-    };
-    
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+const Login = ({ history }) => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const user = useSelector(state => state.user.user)
+  const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    if (e.target.name === 'email') setEmail(e.target.value);
+    if (e.target.name === 'password') setPassword(e.target.value);
   }
 
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    }
-
-  handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const user = this.state;
-    this.props.checkUserLogin(user).then(() => { this.props.history.push('/'); }).catch(() => toastr.error('Log in error', 'Check your email and password'));
+    checkUserLogin({ email, password })
+      .then(user => {
+        dispatch({ type: SET_USER, user });
+        history.push('/');
+      })
+      .catch(() => toastr.error('Log in error', 'Check your email and password'));
   }
 
-  render() {
-    return (
-      !Object.keys(this.props.user).length
-        ? <LoginForm onChange={this.handleChange} onSubmit={this.handleSubmit} />
-        : <Redirect to='/' />
-    );
-  }
+  return (
+    !Object.keys(user).length ? <LoginForm onChange={handleChange} onSubmit={handleSubmit} /> : <Redirect to='/' />
+  );
 }
-const mapStateToProps = (state) => ({
-  user: state.user.user
-});
-const mapDispatchToProps = (dispatch) => ({
-  checkUserLogin: (user) => dispatch((checkUserLogin(user)))
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

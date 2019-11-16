@@ -23,23 +23,23 @@ const Modal = styled.div`
   margin: 40px auto;
   &.fade-in {
     opacity: ${props => {
-        switch (props.fadeType) {
-          case "in":
-            return "1";
-          default:
-            return "0";
-        };
-      }};
+    switch (props.fadeType) {
+      case "in":
+        return "1";
+      default:
+        return "0";
+    };
+  }};
     transition: ${props => {
-        switch (props.fadeType) {
-          case "in":
-            return `opacity linear 0.25s;`;
-          case "out":
-            return `opacity linear 0.25s;`;
-          default:
-            return "";
-        }
-      }};
+    switch (props.fadeType) {
+      case "in":
+        return `opacity linear 0.25s;`;
+      case "out":
+        return `opacity linear 0.25s;`;
+      default:
+        return "";
+    }
+  }};
   }
   &.fade-out {
     opacity: 0;

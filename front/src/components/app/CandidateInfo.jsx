@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCandidate } from '../../../redux/action-creator/candidate.js';
-import { connect } from 'react-redux';
-import Button from './Button';
 
 
 const CandidateInfo = props => {
@@ -9,9 +7,9 @@ const CandidateInfo = props => {
   const [candidate, setCandidate] = useState(null);
 
   useEffect(() => {
-    const fetchCandidate = async () => await props.fetchCandidate(props.candID).then(res => setCandidate(res));
+    const loadCandidate = async () => await fetchCandidate(props.candID).then(candidate => setCandidate(candidate));
 
-    fetchCandidate();
+    loadCandidate();
   }, []);
 
   const onClick = () => { props.history.push('/') };
@@ -32,7 +30,7 @@ const CandidateInfo = props => {
           </div>
           <div className="col-md-12 no-padding pull-down">
             <p>Candidate's Expertise:
-              <textarea readOnly className='form-control' name='expertise' rows='10' cols='50' id='candidateExpTextarea'>{candidate.expertise}</textarea></p>
+              <textarea readOnly className='form-control' name='expertise' rows='10' cols='50' id='candidateExpTextarea' value={candidate.expertise}></textarea></p>
           </div>
         </div>
         <div className='form-group inline-block'>
@@ -49,8 +47,5 @@ const CandidateInfo = props => {
   );
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchCandidate: (id) => dispatch(fetchCandidate(id))
-});
 
-export default connect(null, mapDispatchToProps)(CandidateInfo);
+export default CandidateInfo;

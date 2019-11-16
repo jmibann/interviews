@@ -14,7 +14,7 @@ const Index = require('./routes/index');
 const User = require('./models/User');
 const condition = { where: { nombre: 'admin' } };
 const admin = { nombre: 'admin', email: 'admin@endava.com', password: '123456', area: 'admin', isAdmin: true }
-const sysAdmin = { nombre: 'user', email: 'user@endava.com', password: '123456', area: 'user', isAdmin: true }
+const userLevel = { nombre: 'user', email: 'user@endava.com', password: '123456', area: 'user', isAdmin: false }
 
 
 app.use(cookieParser());
@@ -60,7 +60,7 @@ sessionStore.sync().then(() => db.sync({ force: false }).then(con => {
   User.findOne(condition).then(user => {
     if (!user) {
       User.create(admin);
-      User.create(sysAdmin);
+      User.create(userLevel);
     }
   });
   console.log(`${con.options.dialect} database ${con.config.database} connected at ${con.config.host}:${con.config.port}`);

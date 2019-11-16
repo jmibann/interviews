@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Axios from 'axios';
 
 import { fetchSistAnswers } from '../../../redux/action-creator/answer';
-import { getAllCandidates, fetchCandidate } from '../../../redux/action-creator/candidate';
+import { fetchCandidate } from '../../../redux/action-creator/candidate';
 import CandidateInfo from '../app/CandidateInfo';
 import StarsCalification from './StarsCalification';
 
@@ -21,7 +21,7 @@ class ReportComp extends React.Component {
 
   changeCandStatus(idCandi, status) {
     Axios.put('/api/candidate/changeStatus', { idCandi, status })
-      .then(() => this.props.getAllCandidates())
+      // .then(() => this.props.getAllCandidates())
       .then(() => this.props.history.push('/candidate'));
   };
 

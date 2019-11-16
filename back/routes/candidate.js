@@ -1,212 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const Sequelize = require('sequelize'); 
+const Sequelize = require('sequelize');
 
-const Candidate = require('../models/candidate');
 const User = require('../models/User');
 const Skill = require('../models/skill');
-const Interview = require('../models/interview');
 const mailer = require('../mailer/mailer');
+const Candidate = require('../models/candidate');
+const Interview = require('../models/interview');
 
 router.post('/create', (req, res) => {
-  let candidateData = { ...req.body.candidate };
-  let selectedSkills = req.body.candidate.selectedSkills;
-  let arrId = [];
+  let candidate =req.body;
 
-  selectedSkills.map((obj) => arrId.push(obj.id));
-  delete(candidateData.selectedSkills);
+  Candidate.findOne({ where: { email: candidate.email } }).then(found => {
+    if (found) {
+      return res.send(false)
+    } else {
+      let skills =candidate.skills;
+      delete (candidate.skills);
+      Candidate.create(candidate).then(candidate => candidate.setSkills(skills)).then(data => res.status(201).send(data)).catch(e => res.send({ error: e.errors[0].message }))
+    }
 
-  Candidate.create(candidateData).then(candidate => candidate.setSkills(arrId)).then(data => res.status(201).send(data)).catch(e => {
-    res.send({ error: e.errors[0].message })
-  }
-    );
-});
-
-router.get('/getAll', (req, res) => {
-  const skillModel = [{ model: Skill, through: { attributes: [] } }];
-
-  Candidate.findAll({ include: skillModel }).then(candidates => res.send(candidates));
-});
-
-router.get('/sizeOfAllCandidatesList', (req, res) => {
-  Candidate.findAll().then(candidates => res.send({ length: candidates.length }));
-});
-
-router.get('/sizeOfMyCandidatesList/:userId', (req, res) => {
-  const skillModel = [{ model: Skill, through: { attributes: [] } }];
-  const condition = { [Sequelize.Op.or]: [{ interviewerHRId: req.params.userId }, { interSIST1Id: req.params.userId }, { interSIST2Id: req.params.userId }] };
-
-  Candidate.findAll({ include: skillModel, where: condition }).then(candidates => res.send({ length: candidates.length }));
-});
-
-router.get('/RRHH/sizeOfGroup', (req, res) => {
-  const parameters = {};
-  const keys = Object.keys(req.query);
-  const ascendent = [['surname', 'ASC'], ['name', 'ASC']];
-  const descendent = [['surname', 'DESC'], ['name', 'DESC']];
-
-  let whereSkillParam = {};
-  let fullName = '';
-  let statusParam = '%e%';
-  let ascDescArrayParam = [];
-
-  keys.map(key => parameters[key] = req.query[key]);
-
-
-  if (parameters.status) statusParam = parameters.status;
-  if (parameters.fullName) fullName = parameters.fullName;
-  if (parameters.skills) whereSkillParam.skill = parameters.skills;
-  if (parameters.fullNameSorted === 'true' || parameters.fullNameSorted === 'false') {
-    parameters.fullNameSorted === 'true' ? ascDescArrayParam = ascendent : ascDescArrayParam = descendent;
-  }
-
-  let condition = {
-    status: { [Sequelize.Op.iLike]: statusParam },
-    [Sequelize.Op.or]: [{ surname: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }, { name: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }]
-  }
-
-  Candidate.findAll({ include: [{ model: Skill, through: { attributes: [] }, where: whereSkillParam }], where: condition, order: ascDescArrayParam }).then(candidates => res.send({ size: candidates.length }));
-});
-
-router.get('/RRHH/group', (req, res) => {
-  const parameters = {};
-  const keys = Object.keys(req.query);
-  const limit = parseInt(req.query.pageSize);
-  const ascendent = [['surname', 'ASC'], ['name', 'ASC']];
-  const descendent = [['surname', 'DESC'], ['name', 'DESC']];
-  const skillModel = [{ model: Skill, through: { attributes: [] } }];
-  const offset = parseInt(req.query.page) * parseInt(req.query.pageSize);
-
-  let fullName = '';
-  let statusParam = '%e%';
-  let ascDescArrayParam = [['updatedAt', 'DESC']];
-
-  keys.map(key => { parameters[key] = req.query[key]; });
-
-  if (parameters.status) statusParam = parameters.status;
-  if (parameters.fullName) fullName = parameters.fullName;
-  if (parameters.fullNameSorted === 'true' || parameters.fullNameSorted === 'false')
-    parameters.fullNameSorted === 'true' ? ascDescArrayParam = ascendent : ascDescArrayParam = descendent;
-
-  const condition = {
-    status: { [Sequelize.Op.iLike]: statusParam },
-    [Sequelize.Op.or]: [{ surname: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }, { name: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }]
-  }
-
-  if (parameters.skills) {
-    const skillModelFiltered = [{ model: Skill, through: { attributes: [] }, where: { skill: { [Sequelize.Op.like]: parameters.skills } } }];
-    Candidate.findAll({ limit, offset, include: skillModelFiltered, where: condition, order: ascDescArrayParam }).then(skilledCandidates => {
-      let IDarray = skilledCandidates.map(candidate => candidate.id);
-      Candidate.findAll({ include: skillModel, where: { id: IDarray }, order: ascDescArrayParam }).then(candidates => res.send(candidates));
-    });
-  } else {
-    Candidate.findAll({ limit, offset, include: skillModel, where: condition, order: ascDescArrayParam }).then(candidates => res.send(candidates))
-  }
-});
-
-router.get('/sist/:userID/group', (req, res) => {
-  const parameters = {};
-  const keys = Object.keys(req.query);
-  const limit = parseInt(req.query.pageSize);
-  const userID = parseInt(req.params.userID);
-  const ascendent = [['surname', 'ASC'], ['name', 'ASC']];
-  const descendent = [['surname', 'DESC'], ['name', 'DESC']];
-  const skillModel = [{ model: Skill, through: { attributes: [] } }];
-  const offset = parseInt(req.query.page) * parseInt(req.query.pageSize);
-
-  let fullName = '';
-  let statusParam = '%e%';
-  let ascDescParam = [['updatedAt', 'DESC']];
-
-  keys.map(key => { parameters[key] = req.query[key]; });
-
-  if (parameters.status) statusParam = parameters.status;
-  if (parameters.fullName) fullName = parameters.fullName;
-  if (parameters.fullNameSorted === 'true' || parameters.fullNameSorted === 'false')
-    parameters.fullNameSorted === 'true' ? ascDescParam = ascendent : ascDescParam = descendent;
-
-  const condition = {
-    status: { [Sequelize.Op.iLike]: statusParam },
-    [Sequelize.Op.and]: [
-      { [Sequelize.Op.or]: [{ interviewerHRId: userID }, { interSIST1Id: userID }, { interSIST2Id: userID }] },
-      { [Sequelize.Op.or]: [{ surname: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }, { name: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }] }
-    ]
-  };
-
-  if (parameters.skills) {
-    const skillModelFiltered = [{ model: Skill, through: { attributes: [] }, where: { skill: parameters.skills } }];
-
-    Candidate.findAll({ limit, offset, include: skillModelFiltered, where: condition, order: ascDescParam }).then(skilledCandidates => {
-      let IDarray = [];
-      for (let i = 0; i < skilledCandidates.length; i += 1) IDarray.push(skilledCandidates[i].id);
-
-      Candidate.findAll({ include: skillModel, where: { id: IDarray }, order: ascDescParam }).then(candidates => res.send(candidates));
-    });
-  } else {
-    Candidate.findAll({ limit, offset, include: skillModel, where: condition, order: ascDescParam }).then(candidates => res.send(candidates));
-  }
-});
-
-router.get('/sist/:userID/sizeOfGroup', (req, res) => {
-  const parameters = {};
-  const keys = Object.keys(req.query);
-  const userID = parseInt(req.params.userID);
-  const ascendent = [['surname', 'ASC'], ['name', 'ASC']];
-  const descendent = [['surname', 'DESC'], ['name', 'DESC']];
-  
-  let fullName = '';
-  let whereSkillParam = {};
-  let statusParam = '%e%';
-  let ascDescArrayParam = [];
-
-  keys.map(key => { parameters[key] = req.query[key]; });
-
-  if (parameters.status) statusParam = parameters.status;
-  if (parameters.fullName) fullName = parameters.fullName;
-  if (parameters.skills) whereSkillParam.skill = parameters.skills;
-  if (parameters.fullNameSorted === 'true' || parameters.fullNameSorted === 'false')
-    parameters.fullNameSorted === 'true' ? ascDescArrayParam = ascendent : ascDescArrayParam = descendent;
-
-  const skillModelFiltered = [{ model: Skill, through: { attributes: [] }, where: whereSkillParam }];
-  const condition = {
-    status: { [Sequelize.Op.iLike]: statusParam },
-    [Sequelize.Op.or]: [{ surname: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }, { name: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }],
-    [Sequelize.Op.or]: [{ interviewerHRId: userID }, { interSIST1Id: userID }, { interSIST2Id: userID }]
-  };
-
-  Candidate.findAll({ include: skillModelFiltered, where: condition, attributes: ['id'], order: ascDescArrayParam }).then(candidates => res.send({ size: candidates.length }));
+  });
 });
 
 router.get('/getOne/:id', (req, res) => {
   const userModel = [
-    { model: User, as: 'interviewerHR', attributes: { exclude: ['password', 'salt'] } },
-    { model: User, as: 'interSIST1', attributes: { exclude: ['password', 'salt'] } },
-    { model: User, as: 'interSIST2', attributes: { exclude: ['password', 'salt'] } },
+    // { model: User, as: 'interviewer1Id', attributes: { exclude: ['password', 'salt'] } },
+    // { model: User, as: 'interviewer2Id', attributes: { exclude: ['password', 'salt'] } },
+    // { model: User, as: 'interviewer3Id', attributes: { exclude: ['password', 'salt'] } },
     { model: Skill, through: { attributes: [] } }];
 
-  Candidate.findByPk(req.params.id, { include: userModel }).then(candidate => res.send(candidate));
+  Candidate.findByPk(req.params.id, { include: userModel, attributes: { exclude: ['createdAt', 'updatedAt', 'interviewer1Id', 'interviewer2Id', 'interviewer3Id'] } }).then(candidate => res.send(candidate));
 });
 
-router.delete('/delete/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   Candidate.destroy({ where: { id: req.params.id } }).then(() => res.sendStatus(200));
 });
 
-router.get('/getMyCandidates/:userId', (req, res) => {
-  const userId = req.params.userId;
+router.put('/edit/:id', (req, res) => {
+  let newInfo = req.body;
+  let email = newInfo.email;
+  let id = req.params.id;
 
-  if (userId) {
-    const skillModel = [{ model: Skill, through: { attributes: [] } }];
-    const condition = { [Sequelize.Op.or]: [{ interviewerHRId: userId }, { interSIST1Id: userId }, { interSIST2Id: userId }] };
+  let skills = newInfo.skills
+  delete (newInfo.skills);
 
-    Candidate.findAll({ include: skillModel, where: condition }).then(candidates => res.send(candidates));
-  } else {
-    res.sendStatus(200);
-  }
-});
+  Candidate.findByPk(id).then(candidate => {
+    if (email === candidate.email) {
+      candidate.update(newInfo).then(updatedCandidate => updatedCandidate.setSkills(skills)).then(data => res.send(true));
+    } else {
+      Candidate.findOne({ where: { email } }).then(found => {
+        if (found) {
+          return res.send(false)
+        } else {
+          candidate.update(newInfo).then(updatedCandidate => updatedCandidate.setSkills(skills)).then(() => res.send(true));
+        }
+      })
+    }
 
-// router.post('/setUserHR', (req, res) => {
-//   Candidate.findByPk(req.body.idCandi).then(candidate => candidate.setInterviewerHR(req.body.idUser)).then(() => res.sendStatus(200));
-// });
+  })
+})
 
 router.post('/setUserSIST1', (req, res) => {
   let idCandi = parseInt(req.body.idCandi);
@@ -235,21 +88,84 @@ router.get('/getCandidateInterview/:candID', (req, res) => {
   Interview.findOne({ where: { candidateIDId: req.params.candID } }).then(interVW => res.send({ interviewID: interVW.id }));
 });
 
-router.post('/export', (req, res) => {
-  mailer('candidate', {
-    data: req.body.data,
-    content: {
-      candidate: {
-        name: req.body.content.candidate.name,
-        surname: req.body.content.candidate.surname,
-        email: req.body.content.candidate.email,
-        telephone: req.body.content.candidate.telNumber,
-        expertise: req.body.content.candidate.expertise
-      },
-      HHRR: req.body.content.HHRR,
-      SYS: req.body.content.SYS
-    }
-  });
+const order = (fullNameSorted) => {
+  const FULLNAME_ASCENDENT = [['fullName', 'ASC']];
+  const FULLNAME_DESCENDENT = [['fullName', 'DESC']];
+  const LAST_MODIFIED = [['updatedAt', 'DESC']];
+
+  let order = LAST_MODIFIED;
+
+  if (typeof fullNameSorted == 'string')
+    fullNameSorted === 'true' ? order = FULLNAME_ASCENDENT : order = FULLNAME_DESCENDENT;
+
+  return order
+}
+
+const searchParameter = (userID, query) => {
+  const parameters = {};
+  const keys = Object.keys(query);
+  const limit = parseInt(query.pageSize);
+  const isAdmin = JSON.parse(query.isAdmin);
+  const fullNameSorted = query.fullNameSorted;
+  const offset = parseInt(query.page) * parseInt(query.pageSize);
+
+  let fullName = '';
+  let statusParam = '%e%';
+
+  let searchCondition = {};
+  let skillCondition = {};
+
+  keys.map(key => { parameters[key] = query[key]; });
+
+  if (parameters.status) statusParam = parameters.status;
+  if (parameters.fullName) fullName = parameters.fullName;
+
+  if (isAdmin) {
+    searchCondition = { status: { [Sequelize.Op.iLike]: statusParam }, [Sequelize.Op.or]: [{ fullName: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }] }
+  } else {
+    searchCondition = {
+      status: { [Sequelize.Op.iLike]: statusParam },
+      [Sequelize.Op.and]:
+        [
+          { [Sequelize.Op.or]: [{ interviewer1Id: userID }, { interviewer2Id: userID }, { interviewer3Id: userID }] },
+          { [Sequelize.Op.or]: [{ fullName: { [Sequelize.Op.iLike]: '%' + fullName + '%' } }] }
+        ]
+    };
+  }
+
+  if (parameters.skills) {
+    skillCondition = [{ model: Skill, through: { attributes: [] }, where: { skill: { [Sequelize.Op.like]: parameters.skills } } }];
+  } else {
+    skillCondition = [{ model: Skill, through: { attributes: [] } }];
+  }
+
+  condition = { limit, offset, include: skillCondition, where: searchCondition, order: order(fullNameSorted) }
+  return condition
+}
+
+router.get('/:userID/group', (req, res) => {
+
+  const userID = parseInt(req.params.userID);
+  const isAdmin = JSON.parse(req.query.isAdmin);
+  const fullNameSorted = req.query.fullNameSorted;
+  const myCandidates = (req.query.myCandidates === "true") ? true : false;
+
+  Candidate.findAll(searchParameter(userID, req.query)).then(candidates => {
+
+    let IDs = candidates.map(candidate => candidate.id);
+
+    Candidate.findAll({ include: [{ model: Skill }], where: { id: IDs }, order: order(fullNameSorted) })
+      .then(result => result.map(obj => obj.dataValues))
+      .then(candidates => isAdmin
+        ? candidates.map(candidate =>
+          ({ ...candidate, myCandidates: (candidate.interviewer1Id === userID || candidate.interviewer2Id === userID || candidate.interviewer3Id === userID) ? true : false }))
+        : candidates
+      )
+      .then(candidates => (isAdmin && myCandidates) ? candidates.filter(candidate => candidate.myCandidates) : candidates)
+      .then(candidates => candidates.map(candidate => ({ ...candidate, skills: candidate.skills.map(skill => skill.skill).sort().join(' - ') })))
+      .then(candidates => res.send(candidates));
+
+  })
 });
 
 module.exports = router;

@@ -6,7 +6,7 @@ import Async from './helpers/Async';
 
 import { fetchUser } from '../redux/action-creator/user';
 
-const AsyncAllCandidates = Async(() => import('./components/candidate/AllCandidates.container'));
+const AsyncCandidates = Async(() => import('./components/candidate/Candidates.container'));
 const AsyncAllUsers = Async(() => import('./components/user/AllUsers.container'));
 const AsyncConfiguration = Async(() => import('./components/app/Configuration.container'));
 const AsyncHeader = Async(() => import('./components/app/Header'));
@@ -70,8 +70,8 @@ class Main extends React.Component {
 
               <Route
                 path='/candidate'
-                render={(props) => (
-                  <AsyncAllCandidates {...props} user={this.props.user} />)} />
+                render={({ history }) => (
+                  <AsyncCandidates history={history} user={this.props.user} />)} />
 
               <Route exact
                 path='/configuration'

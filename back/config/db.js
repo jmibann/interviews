@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const POSTGRES_USR = process.env.POSTGRES_USR || 'postgres';
 const POSTGRES_PWD = process.env.POSTGRES_PWD || 'postgres'
-const POSTGRES_HOST = process.env.POSTGRES_HOST || 'interviews-db'
+const POSTGRES_HOST = process.env.POSTGRES_HOST || 'localhost'
 const POSTGRES_PORT = process.env.POSTGRES_PORT || '5432'
 const POSTGRES_DB = process.env.POSTGRES_DB || 'endavadb'
 

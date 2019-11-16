@@ -1,0 +1,82 @@
+.upload {
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* flex: 1; */
+    align-items: flex-start;
+    text-align: left;
+    overflow: hidden;
+    width: 100%;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    padding-top: 16px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.files {
+    margin-left: 32px;
+    align-items: flex-start;
+    justify-items: flex-start;
+    /* flex: 1; */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.actions {
+    display: flex;
+    /* flex: 1; */
+    width: 100%;
+    align-items: flex-end;
+    /* flex-direction: column; */
+    margin-top: 32px;
+}
+
+.title {
+    margin-bottom: 32px;
+    color: #555;
+}
+
+.filename {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #555;
+}
+
+.row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 23px;
+    padding: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+    max-width: 600px;
+}
+
+.check-icon {
+    opacity: 0.5;
+    /* margin-left: 32px; */
+}
+
+.progress-wrapper {
+    display: flex;
+    /* flex: 1; */
+    flex-direction: row;
+    align-items: center;
+    min-width: 250px;
+    justify-content: space-between;
+}
+
+.atachment {
+    background-color: #f5f5f5;
+    border: 1px solid transparent;
+    font-weight: bold;
+    margin: 0 0 9px;
+    overflow-y: hidden;
+    padding: 4px 4px 4px 8px;
+}

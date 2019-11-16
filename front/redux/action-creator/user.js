@@ -4,11 +4,9 @@ import axios from 'axios';
 export const setUser = (user) => ({ type: SET_USER, user });
 const setUsers = (users) => ({ type: SET_USERS, users });
 
-export const checkUserLogin = (data) =>
-  dispatch =>
-    axios.post('/api/user/login', data).then(res => {
-      return res.data;
-    }).then(usuario => dispatch(setUser(usuario)));
+export const checkUserLogin = (data) => {
+  return axios.post('/api/user/login', data).then(res => res.data).then(usuario => usuario);
+}
 
 export const createUser = (user) => () => axios.post('/api/user/create', { user });
 

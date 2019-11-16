@@ -1,12 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import ReactFileReader from 'react-file-reader';
 
 import { saveQuestionsFromFile } from '../../../redux/action-creator/question';
 import { saveSkillsFromFile } from '../../../redux/action-creator/skill';
 
 
-const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFile, getSkillArray }) => {
+const AddQuestionDropdown = ({ onClick, refreshGrid }) => {
 
   const handleFiles = (files) => {
     let quoteRemover = function (str) {
@@ -42,20 +41,20 @@ const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFil
         }
       }))
 
-      saveSkillsFromFile(arrayNonDuplicatedSkills).then(() => saveQuestionsFromFile(result))
+      saveSkillsFromFile(arrayNonDuplicatedSkills).then(() => saveQuestionsFromFile(result)).then(() => refreshGrid());
     };
 
     reader.readAsText(files[0]);
   }
 
   return (
-    <div className="inline-block form-group">
+    <div className="inline-block form-group add-question-dpdw">
       <div className="dropdown">
-        <button className="btn btn-orange pull-right no-margin dropdown-toggle" type="button" data-toggle="dropdown">
+        <button className="btn btn-orange pull-left no-margin dropdown-toggle" type="button" data-toggle="dropdown">
           <span>Add questions </span>
           <span className="glyphicon glyphicon-plus"></span>
         </button>
-        <ul className="dropdown-menu dropdown-menu-right custom-dropdown">
+        <ul className="dropdown-menu dropdown-menu-left custom-dropdown">
           <li>
             <button onClick={onClick}>Add new question manually</button>
           </li>
@@ -71,10 +70,4 @@ const AddQuestionDropdown = ({ onClick, saveSkillsFromFile, saveQuestionsFromFil
 
 }
 
-
-const mapDispatchToProps = (dispatch) => ({
-  saveSkillsFromFile: (questionsArray) => dispatch(saveSkillsFromFile(questionsArray)),
-  saveQuestionsFromFile: (questionsArray) => dispatch(saveQuestionsFromFile(questionsArray)),
-});
-
-export default connect(null, mapDispatchToProps)(AddQuestionDropdown);
+export default AddQuestionDropdown;

@@ -24,29 +24,33 @@ const setQuestionsSis = (questionSIS) => {
 };
 
 
-export const getQuestions = () => dispatch =>
-  axios.get('/api/question/reqAllQuestions/')
+export const getQuestions = () => {
+  return axios.get('/api/question/reqAllQuestions/')
     .then(res => res.data)
     .then(questions => {
       questions.forEach(question => question.skills = question.skills.map(skill => skill.skill).sort().join(' - '));
       return questions
     })
-    .then(questions => dispatch(setQuestions(questions)));
+    .then(questions => questions);
+}
 
 export const searchHRQuestions = () => dispatch =>
-  axios.get('/api/question/searchHRQuestions/')
-    .then(res => dispatch(setHRQuestions(res.data)));
+  axios.get('/api/question/searchHRQuestions/').then(res => dispatch(setHRQuestions(res.data)));
 
-export const deleteQuestion = (questId) => dispatch =>
-  axios.get('/api/question/delete/' + questId)
-    .then(() => dispatch(getQuestions()));
+export const deleteQuestion = (id) => {
+  return axios.get('/api/question/delete/' + id).then(() => getQuestions());
+}
 
-export const editQuestion = (questId, modifiedQuestion) => dispatch =>
-  axios.post(`/api/question/edit/${questId}`, { content: modifiedQuestion }).then(() => dispatch(getQuestions()));
+export const logicDeleteQuestion = (id) => {
+  return axios.get('/api/question/logicDelete/' + id).then(() => getQuestions());
+}
 
+export const editQuestion = (questId, modifiedQuestion) => {
+  return axios.put(`/api/question/edit/${questId}`, { content: modifiedQuestion }).then(res=> res.data);
+}
 
-export const saveQuestionsFromFile = (questionsArray) => dispatch => {
-  axios.post('/api/question/bulkCreate', questionsArray).then(() => dispatch(getQuestions()));
+export const saveQuestionsFromFile = (questionsArray) => {
+  axios.post('/api/question/bulkCreate', questionsArray).then(() => getQuestions());
 };
 
 export const fetchCandidateQuestions = (skills) => dispatch => {
@@ -71,6 +75,6 @@ export const fetchSisQuestions = (interviewID) => dispatch => {
 
 
 export const createQuestion = (content, skills, mandatory) => {
-  return axios.post('/api/question/create', { content, skills, mandatory })
+  return axios.post('/api/question/create', { content, skills, mandatory }).then(res=> res.data)
 };
 

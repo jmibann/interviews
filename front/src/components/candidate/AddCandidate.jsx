@@ -1,56 +1,56 @@
 import React from 'react';
-import AddSkillInline from '../skill/AddSkillInline';
+import SkillInput from '../question/SkillInput';
+import UploadFile from '../app/UploadFile';
 
-const Candidate = (props) => {
+const Candidate = ({ onChange, skillList, handleSkillSubmit, closeModal, onSubmit, candidate }) => {
+
   return (
-    <div>
-      <form onSubmit={props.onSubmit} id="candidateForm">
+    <div className='add-candidate-modal'>
+      <div className='add-candidate-modal-left'>
         <div>
           <div className='addCandidateDiv' >
-            <label htmlFor="firstName" className='pull-left'>First Name: </label>
-            <input onChange={props.onChange} type="text" maxLength="200" className="form-control inputLogin" id="LastName" placeholder="Name" name='name' />
+            <label className='pull-left'>Full Name: </label><span aria-hidden='true' className='red'>*</span>
+            <input onChange={onChange} value={candidate.fullName} type='text' maxLength='200' className='form-control inputLogin' placeholder='Full Name' name='fullName' />
           </div>
           <div className='addCandidateDiv pull-left'>
-            <label htmlFor="lastName" className='pull-left'>Last Name: </label>
-            <input onChange={props.onChange} type="text" maxLength="200" className="form-control inputLogin" id="First Name" placeholder="Last Name" name='surname' />
+            <label className='pull-left'>Skype ID: </label>
+            <input onChange={onChange} value={candidate.skypeId} type='text' maxLength='200' className='form-control inputLogin' id='Skype ID' placeholder='Skype ID' name='skypeId' />
           </div>
         </div>
 
         <div>
           <div className='addCandidateDiv'>
-            <label htmlFor="email" className='pull-left'>E-mail: </label>
-            <input onChange={props.onChange} type="text" className="form-control inputLogin" id="Email" placeholder="Email" name='email' />
+            <label className='pull-left'>Email: </label><span aria-hidden='true' className='red'>*</span>
+            <input onChange={onChange} value={candidate.email} type='text' className='form-control inputLogin' id='Email' placeholder='Email' name='email' />
           </div>
 
           <div className='addCandidateDiv'>
-            <label htmlFor="number" className='pull-left'>Mobile Number: </label>
-            <input onChange={props.onChange} type="tel" className="form-control inputLogin" id="phone" placeholder="Mobile Number" name='telNumber' />
+            <label className='pull-left'>Phone Number: </label>
+            <input onChange={onChange} value={candidate.telNumber} type='tel' className='form-control inputLogin' id='phone' placeholder='Phone Number' name='telNumber' />
           </div>
         </div>
 
-        <div>
-          <div className='addCandidateDiv'>
-            <label htmlFor="workExperince">Work Experience</label>
-            <textarea onChange={props.onChange} className="form-control inputLogin" id="WorkExperience" rows="3" name="expertise"></textarea>
-          </div>
+        <label className='pull-left'>Skills: </label><span aria-hidden='true' className='red'>*</span>
+        <div className='addCandidateDiv' style={{ width: '100%' }}>
+          <SkillInput options={skillList} setQuestionSkills={handleSkillSubmit} />
+        </div>
 
+        <div className='addCandidateDiv' style={{ width: '100%' }}>
+          <label >Work Experience</label>
+          <textarea onChange={onChange} className='inputLogin add-candidate-text-input' rows='3' name='expertise'></textarea>
+          <span aria-hidden='true' className='red'>*Required field</span>
         </div>
-        <div>
-          <div className='addCandidateDiv'>
-            <AddSkillInline
-              onClick={props.onClick}
-              skillList={props.skillList}
-              handleDelete={props.handleDelete}
-              selectedSkills={props.selectedSkills}
-              handleSkillSubmit={props.handleSkillSubmit}
-              />
-          </div>
+
+      </div>
+
+      <div className='add-candidate-modal-right'>
+        <UploadFile />
+
+        <div className='add-candidate-buttons'>
+          <button type='button' className='btn btn-secondary' onClick={closeModal}>Cancel</button>
+          <button type='button' className='btn btn-orange pull-right' onClick={onSubmit}>Add</button>
         </div>
-        <div className='addCandidateDiv'>
-          <button type="submit" className="btn btn-orange pull-right" onSubmit={props.onSubmit}>Save</button>
-          <button type="button" className="btn btn-secondary" onClick={props.closeModal}>Cancel</button>
-        </div>
-      </form>
+      </div>
 
     </div>
   );

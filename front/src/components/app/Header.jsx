@@ -19,7 +19,7 @@ const Header = (props) => {
           </ul>
         </div>
 
-        <div style={{ float: 'left', lineHeight: '56px', paddingLeft: '200px' }} >VER 1.2.13</div>
+        <div style={{ float: 'left', lineHeight: '56px', paddingLeft: '200px' }} >VER 1.2.15</div>
 
         <div className="log-out">
           <li className="dropdown">
