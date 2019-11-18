@@ -56,16 +56,16 @@ const Dropzone = ({ files, disabled, filesAddition, onChange, renderActions, ren
     <div>
 
       <div className={`dropzone ${hightlight ? "highlight" : ""}`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} style={{ cursor: disabled ? "default" : "pointer" }}>
-        <label className='pull-left' >Work Experience</label>
+        <label className='pull-left' >Work Experience: </label>
         <textarea onChange={onChange} className='inputLogin add-candidate-text-input' rows='3' name='expertise'></textarea>
-      </div>
 
-      <div className="files">
-        {files.map(file =>
-          <div key={file.name} className='row atachment'>
-            {renderProgress(file, uploadProgress)}
-          </div>
-        )}
+        <div className="files">
+          {files.map(file =>
+            <div key={file.name} className='row atachment'>
+              {renderProgress(file, uploadProgress)}
+            </div>
+          )}
+        </div>
       </div>
 
       <div>
