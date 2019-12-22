@@ -2,13 +2,14 @@ import React from 'react';
 import SkillInput from '../question/SkillInput';
 import UploadFile from '../app/UploadFile';
 
-const Candidate = ({ onChange, skillList, handleSkillSubmit, closeModal, onSubmit, candidate }) => {
+const Candidate = ({ onChange, skillList, handleSkillSubmit, redirectGrid, onSubmit, candidate, uploadFiles, isUploading, files, setFiles }) => {
 
   return (
     <div className='add-candidate-modal'>
       <div className='add-candidate-modal-left'>
+        <h3>Add new candidate</h3>
         <div>
-          <div className='addCandidateDiv' >
+          <div className='addCandidateDiv' >  
             <label className='pull-left'>Full Name: </label><span aria-hidden='true' className='red'>*</span>
             <input onChange={onChange} value={candidate.fullName} type='text' maxLength='200' className='form-control inputLogin' placeholder='Full Name' name='fullName' />
           </div>
@@ -36,7 +37,7 @@ const Candidate = ({ onChange, skillList, handleSkillSubmit, closeModal, onSubmi
         </div>
 
         <div className='addCandidateDiv' style={{ width: '100%' }}>
-          <UploadFile onChange={onChange} />
+          <UploadFile onChange={onChange} uploadFiles={uploadFiles} isUploading={isUploading} files={files} setFiles={setFiles} />
           <span aria-hidden='true' className='red'>*Required field</span>
         </div>
 
@@ -44,8 +45,8 @@ const Candidate = ({ onChange, skillList, handleSkillSubmit, closeModal, onSubmi
 
       <div className='add-candidate-modal-right'>
         <div className='add-candidate-buttons'>
-          <button type='button' className='btn btn-secondary' onClick={closeModal}>Cancel</button>
-          <button type='button' className='btn btn-orange pull-right' onClick={onSubmit}>Add</button>
+          <button type='button' className='btn btn-secondary' onClick={redirectGrid}>Cancel</button>
+          <button type='button' className='btn btn-orange' onClick={onSubmit}>Add</button>
         </div>
       </div>
 

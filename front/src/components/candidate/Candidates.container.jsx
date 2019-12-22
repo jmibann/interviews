@@ -70,6 +70,8 @@ const Candidates = ({ user, history }) => {
     deleteCandidate(id).then(() => refreshTable()).then(() => closeModal());
   }
 
+  const openCandidate = () => { history.push('/addCandidate') };
+
   return (
     <div>
       {Object.keys(user).length
@@ -79,7 +81,7 @@ const Candidates = ({ user, history }) => {
             : null}
 
           {user.isAdmin
-            ? <Button text={"Add candidate "} type={"Button"} icon={"glyphicon glyphicon-plus"} onClick={openAddCandidateModal} />
+            ? <Button text={"Add candidate "} type={"Button"} icon={"glyphicon glyphicon-plus"} onClick={openCandidate} />
             : null
           }
           <CandidatesGrid

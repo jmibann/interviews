@@ -1,0 +1,36 @@
+.create-template {
+  width: 100%;
+  padding: 5px;
+  margin: 10px auto;
+}
+
+.create-template-buttons {
+  width: 100%;
+}
+.margin {
+  margin: 5px;
+}
+
+.padding {
+  padding: 5px;
+}
+.questions-box {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  border: 1px solid #de411b;
+  padding: 25px;
+  margin-top: 50px;
+}
+
+.all-selector-checkbox {
+  width: 100%;
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+
+.button-left{
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}

@@ -17,8 +17,10 @@ const CandidateInfo = props => {
   return (
     candidate
       ? <div>
-        <div className='sub-title'>Candidate: {candidate.fullName} - {candidate.skills && <span>{candidate.skills.map(skill => skill.skill).join(" - ")}</span>}</div>
+        <div className='sub-title'> <span style={{ color: "black" }}>Candidate:</span> {candidate.fullName} <span style={{ color: "black" }}>Skills:</span> {candidate.skills && <span>{candidate.skills.map(skill => skill.skill).join(" - ")}</span>}    </div>
         <div className='form-group inline-block'>
+          <div className="col-md-4 no-padding">Status: <span className="label label-primary ml-4">{candidate.status}</span></div>
+          <div className="col-md-4 no-padding"><span>Technical Interviewer: -</span></div>
           <div className="col-md-4 no-padding">
             <p>Email Address: {candidate.email}</p>
           </div>
@@ -26,7 +28,7 @@ const CandidateInfo = props => {
             <p>Phone: {candidate.telNumber}</p>
           </div>
           <div className="col-md-4 no-padding">
-            <p>SkypeID: <span>SKYPE ID PLACEHOLDER</span></p>
+            <p>SkypeID: <span>{candidate.skypeId}</span></p>
           </div>
           <div className="col-md-12 no-padding pull-down">
             <p>Candidate's Expertise:

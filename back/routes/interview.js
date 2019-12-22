@@ -1,6 +1,7 @@
 const express = require('express');
 const Interview = require('../models/interview');
 const Candidate = require('../models/candidate');
+
 const router = express.Router();
 
 router.post('/newInterview', (req, res) => {
@@ -20,8 +21,8 @@ router.get('/getInterview/:id', (req, res) => {
 });
 
 router.post('/candidateInt', (req, res) => {
-  const  questionsID = req.body.questionsID;
-  const condition = { where: { candidateIDId:  req.body.candidateID } };
+  const questionsID = req.body.questionsID;
+  const condition = { where: { candidateIDId: req.body.candidateID } };
 
   Interview.findOne(condition).then(interview => interview.addQuestion(questionsID, { through: 'Answer' }));
   res.send(200);

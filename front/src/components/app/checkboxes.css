@@ -1,0 +1,13 @@
+.questions-box {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  border: 1px solid #de411b;
+  padding: 25px;
+}
+
+.all-selector-checkbox {
+  width: 100%;
+  font-weight: 600;
+  padding-bottom: 5px;
+}

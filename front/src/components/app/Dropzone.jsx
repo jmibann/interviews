@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './dropzone.css'
 
-const Dropzone = ({ files, disabled, filesAddition, onChange, renderActions, renderProgress, uploadProgress }) => {
+const Dropzone = ({ files, disabled, filesAddition, renderActions, renderProgress, uploadProgress }) => {
 
   const [fileInputRef, setFileInputRef] = useState(React.createRef());
   const [hightlight, setHightLight] = useState(false);
@@ -53,29 +53,30 @@ const Dropzone = ({ files, disabled, filesAddition, onChange, renderActions, ren
   }
 
   return (
-    <div>
+    <div className='right-content'>
 
-      <div className={`dropzone ${hightlight ? "highlight" : ""}`} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} style={{ cursor: disabled ? "default" : "pointer" }}>
-        <label className='pull-left' >Work Experience: </label>
-        <textarea onChange={onChange} className='inputLogin add-candidate-text-input' rows='3' name='expertise'></textarea>
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onClick={openFileDialog}
+        onDragLeave={onDragLeave}
+        style={{ cursor: disabled ? 'default' : 'pointer' }}
+        className={`dropzone ${hightlight ? 'highlight' : ''}`}
+      >
 
-        <div className="files">
-          {files.map(file =>
-            <div key={file.name} className='row atachment'>
-              {renderProgress(file, uploadProgress)}
-            </div>
-          )}
+        <input ref={fileInputRef} className='file-input' type='file' multiple onChange={onFilesAdded} />
+
+        <div className='files'>
+          {
+            files.length > 0 ?
+              files.map(file =>
+                <div key={file.name} className='row atachment'>
+                  {renderProgress(file, uploadProgress)}
+                </div>
+              )
+              : <label> Drop files here or click to upload </label>
+          }
         </div>
-      </div>
-
-      <div>
-        <button onClick={openFileDialog} className="btn btn-orange no-margin">
-          <span>Upload Files </span>
-          <span className="fas fa-paperclip"></span>
-          <input ref={fileInputRef} className="file-input" type="file" multiple onChange={onFilesAdded} />
-        </button>
-
-        {renderActions()}
       </div>
 
     </div>

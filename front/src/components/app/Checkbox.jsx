@@ -1,11 +1,11 @@
 import React from 'react';
 
-export const Checkbox = props => {
+export const Checkbox = ({ id, handleCheck, isChecked, content }) => {
   return (
     <div>
       < li>
-        <input key={props.id} className='questions' onChange={props.handleCheckChildElement} type="checkbox" checked={props.isChecked} value={props.id} />
-        <label>{props.content}</label>
+        <input key={id} className='questions' onChange={() => handleCheck(id, isChecked)} type="checkbox" checked={isChecked} value={id} />
+        <label>{content}</label>
       </li >
 
     </div>

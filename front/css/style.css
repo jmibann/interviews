@@ -268,12 +268,6 @@ i.far.fa-file-alt {
     font-family: "Roboto", sans-serif;
 }
 
-.skillPage {
-    display: flex;
-    margin-top: 110px;
-    justify-content: start;
-}
-
 #searchBar {
     display: flex;
 }

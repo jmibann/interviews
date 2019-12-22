@@ -43,7 +43,7 @@ const Skill = () => {
     });
   }
 
-  const checkIfSkillSelected = () => { return skillInput === '' }
+  const checkIfSkillSelected = () => { return  skillInput.trim() === ''}
 
   const handleSubmit = (e) => {
     e.preventDefault();

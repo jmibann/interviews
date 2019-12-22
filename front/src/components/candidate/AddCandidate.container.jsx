@@ -4,15 +4,17 @@ import { toastr, actions as toastrActions } from 'react-redux-toastr';
 import AddCandidateComp from './AddCandidate';
 import EditCandidate from './EditCandidate';
 
-import { getAllSkills } from '../../../redux/action-creator/skill'
+import { getAllSkills } from '../../../redux/action-creator/skill';
 import { createCandidate, fetchCandidate, editCandidate } from '../../../redux/action-creator/candidate';
 
 const initialValue = { fullName: '', skypeId: '', email: '', telNumber: '', expertise: '', skills: [] };
 
-const AddCandidate = ({ id, refreshTable, closeModal }) => {
+const AddCandidate = ({ id, refreshTable, closeModal, history }) => {
 
-  const [candidate, setCandidate] = useState(initialValue);
+  const [files, setFiles] = useState([]);
   const [skillList, setSkillList] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [candidate, setCandidate] = useState(initialValue);
 
   useEffect(() => {
     const fetchSkills = async () => await getAllSkills().then(skills => setSkillList(skills));
@@ -25,7 +27,7 @@ const AddCandidate = ({ id, refreshTable, closeModal }) => {
     }
   }, [])
 
-  const checkFields = () => {
+   const checkFields = () => {
     if (!candidate.fullName || !candidate.email) {
       toastr.warning('Missing fields...', 'You must complete required fields in order to continue.');
       return false;
@@ -41,22 +43,26 @@ const AddCandidate = ({ id, refreshTable, closeModal }) => {
     }
     return true;
   }
-
+  
+  const redirectGrid = () => { history.push('/Candidate') };
+  
   const addCandidate = (e) => {
     e.preventDefault();
     if (checkFields()) {
-      createCandidate({ ...candidate, status: 'New' }).then(wasCreated => {
-        if (wasCreated) {
-          toastr.success('Candidate was created successfully');
-          refreshTable();
-          closeModal();
+      createCandidate(candidate).then(({id}) => {
+        if (id) {
+          uploadFiles(id)
+            .then(() => {
+              toastr.success('Candidate was created successfully');
+              redirectGrid();
+            })
+            .catch(error => console.log("ERROR - One or more files couldn't be saved", error))
         } else {
           toastr.error('e-mail already exist');
         }
       })
     }
   }
-
 
   const editCandidateHandler = (e) => {
     e.preventDefault();
@@ -92,6 +98,38 @@ const AddCandidate = ({ id, refreshTable, closeModal }) => {
 
   }
 
+  const uploadFiles = (candidateId) => {
+    
+    setIsUploading(true);
+
+    const promises = [];
+
+    files.forEach(file => promises.push(sendRequest(file, candidateId)));
+
+    return Promise.all(promises).then(() => setIsUploading(false))
+
+  }
+
+  const sendRequest = (file, candidateId) => {
+    return new Promise((resolve, reject) => {
+      const req = new XMLHttpRequest();
+
+      req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) resolve(file.name + ' - ' + req.response);
+      }
+
+      req.onerror = () => { reject(file.name + ' - ' + req.response) }
+
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      formData.set('pk', candidateId);
+      
+      req.open('POST', '/api/file/fileUpload');
+      req.send(formData);
+
+    });
+  }
+
   return (
     < div >
       {
@@ -115,6 +153,11 @@ const AddCandidate = ({ id, refreshTable, closeModal }) => {
             onChange={handleInputChange}
             selectedSkills={candidate.skills}
             handleSkillSubmit={handleSkillsSelection}
+            uploadFiles={uploadFiles}
+            isUploading={isUploading}
+            files={files}
+            setFiles={setFiles}
+            redirectGrid={redirectGrid}
           />
       }
     </div >

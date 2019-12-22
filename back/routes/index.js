@@ -9,12 +9,14 @@ const skill = require('./skill');
 const answer = require('./answer');
 const question = require('./question');
 const interview = require('./interview');
+const templates = require('./templates');
 const candidate = require('./candidate');
 
 router.use('/user', user);
 router.use('/file', file);
 router.use('/skill', skill);
 router.use('/answer', answer);
+router.use('/templates', templates);
 router.use('/question', question);
 router.use('/interview', interview);
 router.use('/candidate', candidate);

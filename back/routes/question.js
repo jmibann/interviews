@@ -91,7 +91,7 @@ router.post('/candidateQuestions', (req, res) => {
     let idToFetchArray = [];
     questionsArray.forEach(questions => questions.forEach(question => idToFetchArray.push(question.id)));
     idToFetchArray = idToFetchArray.filter((item, index) => idToFetchArray.indexOf(item) === index);
-    Questions.findAll({ where: { id: idToFetchArray }, attributes: ['id', 'content'] }).then(questions => res.send(questions))
+    Questions.findAll({ where: { id: idToFetchArray }, attributes: ['id', 'content', 'mandatory'] }).then(questions => res.send(questions))
   });
 });
 

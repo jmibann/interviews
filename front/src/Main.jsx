@@ -6,15 +6,17 @@ import Async from './helpers/Async';
 
 import { fetchUser } from '../redux/action-creator/user';
 
-const AsyncCandidates = Async(() => import('./components/candidate/Candidates.container'));
-const AsyncAllUsers = Async(() => import('./components/user/AllUsers.container'));
-const AsyncConfiguration = Async(() => import('./components/app/Configuration.container'));
 const AsyncHeader = Async(() => import('./components/app/Header'));
-const AsyncInterviewSisCont = Async(() => import('./components/interview/InterviewSisCont.container'));
 const AsyncLogin = Async(() => import('./components/login/Login.container'));
-const AsyncPreSistInterview = Async(() => import('./components/interview/PreSistInterview.container'));
 const AsyncSistReport = Async(() => import('./components/report/SistReport'));
 const AsyncCandidateInfo = Async(() => import('./components/app/CandidateInfo'));
+const AsyncCreateTemplate = Async(() => import('./components/template/CreateTemplate.container'));
+const AsyncAddCandidate = Async(() => import('./components/candidate/AddCandidate.container'));
+const AsyncAllUsers = Async(() => import('./components/user/AllUsers.container'));
+const AsyncCandidates = Async(() => import('./components/candidate/Candidates.container'));
+const AsyncConfiguration = Async(() => import('./components/app/Configuration.container'));
+const AsyncInterviewSisCont = Async(() => import('./components/interview/InterviewSisCont.container'));
+const AsyncPreSistInterview = Async(() => import('./components/interview/PreSistInterview.container'));
 
 class Main extends React.Component {
   constructor(props) {
@@ -37,6 +39,7 @@ class Main extends React.Component {
 
           <div className="container-fluid">
             <Switch>
+
               <Route exact
                 path='/'
                 render={({ history }) => (this.props.user ? <Redirect to='/candidate' /> : <Redirect to='/login' />)} />
@@ -86,10 +89,29 @@ class Main extends React.Component {
                 render={({ history }) => (
                   <AsyncAllUsers user={this.props.user} history={history} />)} />
 
+
               <Route exact
                 path='/preinterview/:candID'
                 render={({ history, match }) => (
                   <AsyncPreSistInterview history={history} user={this.props.user} candID={match.params.candID} />)} />
+
+              <Route exact
+                path='/addCandidate'
+                render={({ history }) => (
+                  <AsyncAddCandidate history={history} user={this.props.user} />)} />
+
+              <Route exact
+                path='/newtemplate'
+                render={({ history }) => (
+                  <AsyncCreateTemplate history={history} user={this.props.user} />
+                )} />
+
+              {/* <Route exact
+                path='/templates/:templateId'
+                render={({ history, match }) => (
+                  <AsyncCreateTemplate history={history} user={this.props.user} templateId={match.params.templateId} />
+                )} /> */}
+
 
 
             </Switch>

@@ -7,7 +7,7 @@ const POSTGRES_HOST = process.env.POSTGRES_HOST || 'localhost'
 const POSTGRES_PORT = process.env.POSTGRES_PORT || '5432'
 const POSTGRES_DB = process.env.POSTGRES_DB || 'endavadb'
 
-const connect = 'postgres://' + POSTGRES_HOST + ':' + POSTGRES_PORT + '/' + POSTGRES_DB;
+const connect = 'postgres://' + POSTGRES_USR + ':' + POSTGRES_PWD + '@' + POSTGRES_HOST + ':' + POSTGRES_PORT + '/' + POSTGRES_DB;
 console.log('Interviews connection string: ' + connect);
 
 module.exports = new Sequelize(connect, { logging: false });

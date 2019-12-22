@@ -27,44 +27,41 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan('dev'));
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
 });
 
 
-passport.deserializeUser(function (id, done) {
-  User.findByPk(id).then(user => done(null, user));
+passport.deserializeUser(function(id, done) {
+    User.findByPk(id).then(user => done(null, user));
 });
 
 const strategy = { usernameField: 'email', passwordField: 'password' }
 
-passport.use(new LocalStrategy(strategy, function (username, password, done) {
-  User.findOne({ where: { email: username } }).then(function (user) {
-    if (!user) return done(null, false, { message: 'Incorrect username.' });
-    if (!user.validPassword(password)) return done(null, false, { message: 'Incorrect password.' });
-    return done(null, user);
-  }).catch(done);
-}
-));
+passport.use(new LocalStrategy(strategy, function(username, password, done) {
+    User.findOne({ where: { email: username } }).then(function(user) {
+        if (!user) return done(null, false, { message: 'Incorrect username.' });
+        if (!user.validPassword(password)) return done(null, false, { message: 'Incorrect password.' });
+        return done(null, user);
+    }).catch(done);
+}));
 
 app.use(express.static(path.resolve(__dirname, '../front/')));
 
 app.use('/api', Index);
 
-app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, '../front/index.html'));
+app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../front/index.html'));
 });
 
 
 sessionStore.sync().then(() => db.sync({ force: false }).then(con => {
-  User.findOne(condition).then(user => {
-    if (!user) {
-      User.create(admin);
-      User.create(userLevel);
-    }
-  });
-  console.log(`${con.options.dialect} database ${con.config.database} connected at ${con.config.host}:${con.config.port}`);
-  app.listen(3000, () => console.log('SERVER LISTENING AT PORT', 3000));
+    User.findOne(condition).then(user => {
+        if (!user) {
+            User.create(admin);
+            User.create(userLevel);
+        }
+    });
+    console.log(`${con.options.dialect} database ${con.config.database} connected at ${con.config.host}:${con.config.port}`);
+    app.listen(3000, () => console.log('SERVER LISTENING AT PORT', 3000));
 }));
-
-

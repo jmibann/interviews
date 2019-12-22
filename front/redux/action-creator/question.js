@@ -45,25 +45,21 @@ export const logicDeleteQuestion = (id) => {
   return axios.get('/api/question/logicDelete/' + id).then(() => getQuestions());
 }
 
-export const editQuestion = (questId, modifiedQuestion) => {
-  return axios.put(`/api/question/edit/${questId}`, { content: modifiedQuestion }).then(res=> res.data);
+export const editQuestion = (questionId, modifiedQuestion) => {
+  return axios.put(`/api/question/edit/${questionId}`, { content: modifiedQuestion }).then(res => res.data);
 }
 
 export const saveQuestionsFromFile = (questionsArray) => {
   axios.post('/api/question/bulkCreate', questionsArray).then(() => getQuestions());
 };
 
-export const fetchCandidateQuestions = (skills) => dispatch => {
-  let arrayIdSkills = [];
-  for (let i in skills) {
-    arrayIdSkills.push(skills[i].id);
-  }
+export const fetchCandidateQuestions = (skills) => {
 
-  axios.post('/api/question/candidateQuestions', { arrayIdSkills: arrayIdSkills })
+  return axios.post('/api/question/candidateQuestions', { arrayIdSkills: skills })
     .then(response => {
-      dispatch(setCandidateQuestions(response.data))
-        ;
-    });
+      return response.data
+    }
+    );
 };
 
 export const fetchSisQuestions = (interviewID) => dispatch => {
@@ -75,6 +71,6 @@ export const fetchSisQuestions = (interviewID) => dispatch => {
 
 
 export const createQuestion = (content, skills, mandatory) => {
-  return axios.post('/api/question/create', { content, skills, mandatory }).then(res=> res.data)
+  return axios.post('/api/question/create', { content, skills, mandatory }).then(res => res.data)
 };
 

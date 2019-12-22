@@ -4,6 +4,7 @@ import "react-tabs/style/react-tabs.css";
 
 import QuestionsGrid from '../question/QuestionsGrid';
 import Skill from '../skill/Skill';
+import TemplatesGrid from '../template/TemplatesGrid';
 
 const ConfigurationContainer = props => {
 
@@ -12,13 +13,17 @@ const ConfigurationContainer = props => {
       <TabList>
         <Tab>Question</Tab>
         <Tab>Skills</Tab>
+        <Tab>Interview Templates</Tab>
       </TabList>
 
-      <TabPanel>
+      <TabPanel> 
         <QuestionsGrid />
       </TabPanel>
       <TabPanel>
         <Skill />
+      </TabPanel>
+      <TabPanel>
+        <TemplatesGrid history={props.history} />
       </TabPanel>
     </Tabs>
 

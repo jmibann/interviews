@@ -4,7 +4,7 @@
     "description": "Interview app",
     "main": "server.js",
     "scripts": {
-        "start": "nodemon server",
+        "start": "nodemon server --watch",
         "test": "echo \"Error: no test specified\" && exit 1",
         "prod": "node server"
     },
@@ -19,9 +19,12 @@
         "dotenv": "^8.1.0",
         "ejs": " 2.6.1",
         "express": " 4.16.4",
+        "express-formidable": "^1.2.0",
         "express-session": " 1.15.6",
+        "formidable": "^1.2.1",
         "fs": "0.0.1-security",
         "jquery": " 3.4.1",
+        "lodash": "^4.17.15",
         "morgan": " 1.9.1",
         "net": " 1.0.2",
         "nodemailer": " 6.1.1",
@@ -33,7 +36,8 @@
         "popper": " 1.0.1",
         "redux-thunk": " 2.3.0",
         "request": " 2.88.0",
-        "sequelize": " 6.0.0"
+        "sequelize": " 6.0.0",
+        "unique-filename": "^1.1.1"
     },
     "devDependencies": {
         "nodemon": " 1.18.10"

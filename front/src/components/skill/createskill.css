@@ -1,0 +1,33 @@
+.create-skill {
+  display: flex;
+  justify-content: center;
+
+}
+
+.skillPage {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+  width: 100vw;
+}
+
+.center-skill{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#add-skill-input {
+  width: 59%;
+  margin-right: 10px;
+  border-bottom: 1px solid black;
+  padding: 7px;
+  font-size: 16px;
+}
+
+#add-skill-input:focus {
+  outline-width: 0;
+  border-bottom: 3px solid #de411b;
+}
+

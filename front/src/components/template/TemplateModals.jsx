@@ -1,20 +1,21 @@
 import React from 'react';
 
 import Modal from '../app/Modal';
-import AddCandidateContainer from './AddCandidate.container';
+import CreateTemplateContainer from './CreateTemplate.container';
 
 const DELETE = 'DELETE';
 const EDIT = 'EDIT'
 
-const CandidateModals = ({ whichComponent, isModalOpen, closeModal, refreshTable, id, remove }) => {
+const TemplateModals = ({ whichComponent, isModalOpen, closeModal, refreshTable, id, remove }) => {
   const renderModal = (whichComponent) => {
+
 
     switch (whichComponent) {
       case EDIT:
         return (
           <Modal id='modal' isOpen={isModalOpen} onClose={closeModal} title={'Edit candidate info'}>
             <div className='box-body'>
-              <AddCandidateContainer refreshTable={refreshTable} closeModal={closeModal} id={id} />
+              <CreateTemplateContainer refreshTable={refreshTable} closeModal={closeModal} id={id} />
             </div>
           </Modal>
 
@@ -23,7 +24,7 @@ const CandidateModals = ({ whichComponent, isModalOpen, closeModal, refreshTable
         return (
           <Modal id="modal" isOpen={isModalOpen} onClose={closeModal} title={"Delete candidate"}>
             <div className="box-body">
-              <span> Are you sure you want to delete this candidate? </span>
+              <span> Are you sure you want to delete this template? </span>
               <button type="button" className="btn btn-secondary textModal" onClick={closeModal}>Cancel</button>
               <button type="button" className="btn btn-primary textModal" onClick={remove}>Yes</button>
             </div>
@@ -35,4 +36,4 @@ const CandidateModals = ({ whichComponent, isModalOpen, closeModal, refreshTable
   return (<div>{renderModal(whichComponent)}</div>)
 }
 
-export default CandidateModals;
+export default TemplateModals;

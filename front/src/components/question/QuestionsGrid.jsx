@@ -55,7 +55,7 @@ const QuestionsGrid = () => {
       if (wasUpdated) {
         refreshGrid();
         closeModal();
-        toastr.success('Question sucessfully updated');
+        toastr.success('Question successfully updated');
       } else {
         toastr.error('Question already exists', 'Question cannot be duplicated');
       }
