@@ -23,7 +23,7 @@
         "express-session": " 1.15.6",
         "formidable": "^1.2.1",
         "fs": "0.0.1-security",
-        "jquery": " 3.4.1",
+        "jquery": "3.5.0",
         "lodash": "^4.17.15",
         "morgan": " 1.9.1",
         "net": " 1.0.2",
