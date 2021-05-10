@@ -24,7 +24,7 @@
         "formidable": "^1.2.1",
         "fs": "0.0.1-security",
         "jquery": " 3.4.1",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.21",
         "morgan": " 1.9.1",
         "net": " 1.0.2",
         "nodemailer": " 6.1.1",
