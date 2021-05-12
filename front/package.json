@@ -23,7 +23,7 @@
         "less": " 3.9.0",
         "match-sorter": " 4.0.0",
         "net": " 1.0.2",
-        "nodemailer": " 6.1.1",
+        "nodemailer": "6.4.16",
         "papaparse": " 4.6.3",
         "react": "^16.11.0",
         "react-csv-reader": " 1.2.2",
